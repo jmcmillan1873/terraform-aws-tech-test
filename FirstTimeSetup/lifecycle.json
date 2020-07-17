@@ -1,0 +1,18 @@
+{
+    "Rules": [
+        {
+            "Status": "Enabled",
+            "NoncurrentVersionExpiration": {
+                "NoncurrentDays": 90
+            },
+            "Prefix": "",
+            "NoncurrentVersionTransitions": [
+                {
+                    "NoncurrentDays": 30,
+                    "StorageClass": "GLACIER"
+                }
+            ],
+            "ID": "Archive old versions of State file to glacier after 30 days, delete after 90 days"
+        }
+    ]
+}

@@ -18,15 +18,15 @@ variable "public_key" {
 }
 
 
-variable "project-tag"
+variable "project-tag" {
   default = "Tech Test"
 }
 
-variable "owner-tag"
+variable "owner-tag" {
   default = "JohnMcMillan"
 }
 
-variable "vpc-name"
+variable "vpc-name" {
   default = "JohnMcMillan-Test-VPC"
 }
 
