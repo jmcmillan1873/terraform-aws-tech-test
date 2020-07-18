@@ -46,3 +46,10 @@ variable "private_subnet_numbers" {
   }
 }
 
+variable "web-ami" {
+  type = map
+  default = {
+  eu-west-1 = ami-047bb4163c506cd98
+  us-east-1 = ami-0ff8a91507f77f867
+  }
+}
