@@ -37,13 +37,19 @@ resource "aws_lb_listener" "Web-ALB-http-listener" {
   protocol          = "HTTP"
 
   default_action {
-    type             = "redirect"
+    type            = "redirect"
 
     redirect {
       port        = "443"
       protocol    = "HTTPS"
       status_code = "HTTP_301"
     }
+  }
+
+  tags = {
+    Description     = "Web ALB http listener"
+    Owner           = var.owner-tag
+    Project         = var.project-tag
   }
 }
 
@@ -58,6 +64,12 @@ resource "aws_lb_listener" "Web-ALB-https-listener" {
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.Web_tg_443.arn
+  }
+
+  tags = {
+    Description      = "Web ALB https listener"
+    Owner            = var.owner-tag
+    Project          = var.project-tag
   }
 }
 
@@ -77,6 +89,12 @@ resource "aws_lb_target_group" "Web_tg_443" {
     path     = "/"
     matcher  = "200"
     protocol = "HTTPS"
+  }
+
+  tags = {
+    Description      = "Web ALB https target group"
+    Owner            = var.owner-tag
+    Project          = var.project-tag
   }
 }
 

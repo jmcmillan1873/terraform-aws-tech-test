@@ -69,6 +69,8 @@ resource "aws_subnet" "public" {
   tags = {
     Name = "Public Subnet ${each.key}"
     Tier = "Public"
+    Project = var.project-tag
+    Owner = var.owner-tag
   }
 }
 
@@ -103,6 +105,8 @@ resource "aws_subnet" "private" {
   tags = {
     Name = "Private Subnet ${each.key}"
     Tier = "Private"
+    Project = var.project-tag
+    Owner = var.owner-tag
   }
 }
 

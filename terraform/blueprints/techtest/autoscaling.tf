@@ -16,6 +16,12 @@ EOF
   lifecycle {
     create_before_destroy = true
   }
+
+  tags = {
+    Description      = "Launch Config for Web ASG"
+    Owner            = var.owner-tag
+    Project          = var.project-tag
+  }
 }
 
 
@@ -30,6 +36,13 @@ resource "aws_autoscaling_group" "web_asg" {
   target_group_arns    = [ aws_lb_target_group.Web_tg_443.arn ]
   min_size             = var.min-web-asg-size
   max_size             = var.max-web-asg-size 
+  
+  tags = {
+    Description      = "Web ASG member"
+    Name             = "WebASGNginx"
+    Owner            = var.owner-tag
+    Project          = var.project-tag
+  }
 }
 
 
@@ -47,6 +60,11 @@ resource "aws_launch_configuration" "bastion_lc" {
   lifecycle {
     create_before_destroy = true
   }
+  tags = {
+    Description      = "Launch Config for Bastion ASG"
+    Owner            = var.owner-tag
+    Project          = var.project-tag
+  }
 }
 
 #-------------------------------------------
@@ -59,4 +77,11 @@ resource "aws_autoscaling_group" "bastion_asg" {
   vpc_zone_identifier = [ for s in data.aws_subnet.public : s.id ]
   min_size = 1
   max_size = 1 
+
+  tags = {
+    Description      = "Bastion providing SSH access to vpc"
+    Name             = "Bastion"
+    Owner            = var.owner-tag
+    Project          = var.project-tag
+  }
 }
