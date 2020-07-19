@@ -112,3 +112,22 @@ resource "aws_route_table_association" "private" {
   route_table_id = aws_route_table.private_route_table.id
 }
 
+
+#-------------------------------------------
+# Record some useful data concerning subnets
+# Do here to avoid later chicken and egg.
+#-------------------------------------------
+
+data "aws_subnet_ids" "private" {
+  vpc_id = aws_vpc.vpc.id
+  tags = {
+    Tier = "Private"
+  }
+}
+
+data "aws_subnet_ids" "public" {
+  vpc_id = aws_vpc.vpc.id
+  tags = {
+    Tier = "Public"
+  }
+}

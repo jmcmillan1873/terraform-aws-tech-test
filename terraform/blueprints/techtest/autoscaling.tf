@@ -24,19 +24,16 @@ EOF
 #-------------------------------------------
 data "aws_availability_zones" "all" {}
 
-#data "aws_subnet_ids" "public" {
-#  vpc_id = aws_vpc.vpc.id
-#  
-#  tags = {
-#    Tier = "Public"
-#  }
-#}
+data "aws_subnet" "private" {
+  for_each = data.aws_subnet_ids.private.ids
+  id       = each.value
+}
 
 resource "aws_autoscaling_group" "web_asg" {
   name                 = "web_asg"
   launch_configuration = aws_launch_configuration.web_asg_lc.id
   availability_zones   = data.aws_availability_zones.all.names
-#  vpc_zone_identifier  = data.aws_subnet.public.default.ids
+  vpc_zone_identifier = [ for s in data.aws_subnet.private : s.id ]
   min_size = 2
   max_size = 6 
 }
