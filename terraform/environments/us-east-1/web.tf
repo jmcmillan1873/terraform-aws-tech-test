@@ -17,5 +17,7 @@ module "environment" {
   vpc_name  = "JohnMcMillan VPC"  
   region    = "us-east-1"        
   key_name  = "TBC"
+
+  web_ami   = "ami-0ff8a91507f77f867"
 }
 

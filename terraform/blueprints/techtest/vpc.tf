@@ -54,7 +54,7 @@ resource "aws_route_table" "public_route_table" {
   vpc_id = aws_vpc.vpc.id
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.gw.id
+    gateway_id = aws_internet_gateway.igw.id
   }
 }
 
@@ -65,9 +65,10 @@ resource "aws_subnet" "public" {
   }
   vpc_id            = aws_vpc.vpc.id
   availability_zone = "${var.region}${each.key}"
-  cidr_block        = cidrsubnet(var.cidr, 3, each.value)
+  cidr_block        = cidrsubnet(var.vpc-cidr, 4, each.value)
   tags = {
     Name = "Public Subnet ${each.key}"
+    Tier = "Public"
   }
 }
 
@@ -98,9 +99,10 @@ resource "aws_subnet" "private" {
   }
   vpc_id            = aws_vpc.vpc.id
   availability_zone = "${var.region}${each.key}"
-  cidr_block        = cidrsubnet(var.cidr, 3, each.value )
+  cidr_block        = cidrsubnet(var.vpc-cidr, 4, each.value )
   tags = {
     Name = "Private Subnet ${each.key}"
+    Tier = "Private"
   }
 }
 
