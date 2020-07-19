@@ -56,3 +56,11 @@ variable "web-ami" {
 
 variable "key-name" {
 }
+
+variable "ssl-arn" {
+  type = map
+  default = {
+    eu-west-1 = "arn:aws:acm:eu-west-1:680558138144:certificate/47b45599-f14e-4345-ab3a-2271fdaa849e"
+    us-east-1 = "arn:aws:acm:us-east-1:680558138144:certificate/bb5c74f0-aba8-4f73-a112-deeb9bb2af27"
+  }
+}
