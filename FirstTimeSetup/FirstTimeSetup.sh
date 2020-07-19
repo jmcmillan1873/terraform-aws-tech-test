@@ -17,8 +17,9 @@ aws s3api put-bucket-versioning --bucket $BUCKETNAME --versioning-configuration 
 aws s3api put-bucket-lifecycle-configuration --bucket $BUCKETNAME --lifecycle-configuration file://lifecycle.json
 aws s3api put-bucket-acl --acl private --bucket $BUCKETNAME
 aws s3api put-public-access-block --bucket $BUCKETNAME --public-access-block-configuration "BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true"
+aws s3api put-bucket-tagging --bucket $BUCKETNAME --tagging file://tagging.json
 
 
 
 # Create the DynamoDB table to hold a lock on the statefile to prevent corruption
-aws dynamodb create-table --region eu-west-1 --table-name tf-state-locking --attribute-definitions AttributeName=LockID,AttributeType=S --key-schema AttributeName=LockID,KeyType=HASH --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 
+aws dynamodb create-table --region eu-west-1 --table-name tf-state-locking --attribute-definitions AttributeName=LockID,AttributeType=S --key-schema AttributeName=LockID,KeyType=HASH --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 --tags Key=Owner,Value=JohnMcMillan Key=Project,Value="Tech Test"
