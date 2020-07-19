@@ -17,11 +17,6 @@ EOF
     create_before_destroy = true
   }
 
-  tags = {
-    Description      = "Launch Config for Web ASG"
-    Owner            = var.owner-tag
-    Project          = var.project-tag
-  }
 }
 
 
@@ -37,11 +32,28 @@ resource "aws_autoscaling_group" "web_asg" {
   min_size             = var.min-web-asg-size
   max_size             = var.max-web-asg-size 
   
-  tags = {
-    Description      = "Web ASG member"
-    Name             = "WebASGNginx"
-    Owner            = var.owner-tag
-    Project          = var.project-tag
+  tag {
+    key              = "Description"
+    value            = "Web ASG member"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key              = "Name"
+    value            = "WebASGNginx"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key              = "Owner"
+    value            = var.owner-tag
+    propagate_at_launch = true
+  }
+
+  tag {
+    key              = "Project"
+    value            = var.project-tag
+    propagate_at_launch = true
   }
 }
 
@@ -60,11 +72,6 @@ resource "aws_launch_configuration" "bastion_lc" {
   lifecycle {
     create_before_destroy = true
   }
-  tags = {
-    Description      = "Launch Config for Bastion ASG"
-    Owner            = var.owner-tag
-    Project          = var.project-tag
-  }
 }
 
 #-------------------------------------------
@@ -78,10 +85,28 @@ resource "aws_autoscaling_group" "bastion_asg" {
   min_size = 1
   max_size = 1 
 
-  tags = {
-    Description      = "Bastion providing SSH access to vpc"
-    Name             = "Bastion"
-    Owner            = var.owner-tag
-    Project          = var.project-tag
+  tag {
+    key              = "Description"
+    value            = "Bastion providing SSH access to vpc"
+    propagate_at_launch = true
   }
+
+  tag {
+    key              = "Name"
+    value            = "Bastion"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key              = "Owner"
+    value            = var.owner-tag
+    propagate_at_launch = true
+  }
+
+  tag {
+    key              = "Project"
+    value            = var.project-tag
+    propagate_at_launch = true
+  }
+
 }

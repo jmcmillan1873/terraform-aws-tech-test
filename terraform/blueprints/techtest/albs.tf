@@ -46,11 +46,6 @@ resource "aws_lb_listener" "Web-ALB-http-listener" {
     }
   }
 
-  tags = {
-    Description     = "Web ALB http listener"
-    Owner           = var.owner-tag
-    Project         = var.project-tag
-  }
 }
 
 #Internal ALB Listener 443
@@ -66,11 +61,6 @@ resource "aws_lb_listener" "Web-ALB-https-listener" {
     target_group_arn = aws_lb_target_group.Web_tg_443.arn
   }
 
-  tags = {
-    Description      = "Web ALB https listener"
-    Owner            = var.owner-tag
-    Project          = var.project-tag
-  }
 }
 
 
@@ -104,5 +94,5 @@ resource "aws_lb_target_group" "Web_tg_443" {
 #------------------------------------------------
 
 output "elb-dns" {
-  value = aws_lb.Web-ALB.dns_name
+  value = aws_lb.Web-ALB.dns_name 
 }
