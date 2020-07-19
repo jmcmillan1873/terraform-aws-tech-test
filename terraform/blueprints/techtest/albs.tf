@@ -1,10 +1,10 @@
 #------------------------------------------------
 # Define necessary data
 #------------------------------------------------
-data "aws_subnet" "public" {
-  for_each = data.aws_subnet_ids.public.ids
-  id       = each.value
-}
+#data "aws_subnet" "public" {
+#  for_each = data.aws_subnet_ids.public.ids
+#  id       = each.value
+#}
 
 #------------------------------------------------
 # Web ALB
@@ -68,8 +68,9 @@ resource "aws_lb_listener" "Web-ALB-https-listener" {
 #------------------------------------------------
 resource "aws_lb_target_group" "Web_tg_443" {
   name            = "TechTest-Web-tg-https"
-  port            = "443"
-  protocol        = "HTTPS"
+# Deliberately listing on port 80 - i.e. doing SSL termination on the ALB only for purposes of test
+  port            = "80"
+  protocol        = "HTTP"
   vpc_id          = aws_vpc.vpc.id
 
   health_check {
@@ -77,4 +78,13 @@ resource "aws_lb_target_group" "Web_tg_443" {
     matcher  = "200"
     protocol = "HTTPS"
   }
+}
+
+
+#------------------------------------------------
+# Output DNS name of ALB
+#------------------------------------------------
+
+output "elb-dns" {
+  value = aws_lb.Web-ALB.dns_name
 }
