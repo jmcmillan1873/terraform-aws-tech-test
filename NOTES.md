@@ -4,10 +4,23 @@
 To jump straight into deploying:
 ```
 cd terraform/environments/(eu-west-1 | us-east-1)
+terraform init
 terraform apply -target module.environment.aws_route_table_association.public
 terraform apply -target module.environment.aws_route_table_association.private
 terraform apply
 ```
+
+# Summary of my proposed solutions
+1) To improve resilience, I've replaced the statically defined Web EC2 instance with Autoscaling group.
+   In terms of best practice I've moved the EC2 instance to the private subnet, they're still accessible from the internet via the ALB which *is* in the public subnet.  
+   
+2) I've written the blueprint in such a way that it can accomodate regions of a different size, e.g. the 3 AZ's in eu-west-1 or the 6 AZ's in us-east-1. 
+   it does this by using map variablies (public_subnet_numbers & private_subnet_numbers) which allows us to link AZ's (e.g. 'a' for AzA) to the [netnum](https://www.terraform.io/docs/configuration/functions/cidrsubnet.html) we want to use within the cidr. 
+
+3) Bastion server added, again as an autoscale group, this time with a max count of 1 for basic fault tolerance & auto recovery.
+   Security groups have been configuired to only permit SSH access to the web tier from the bastion. 
+
+4) Basic lambda function deployed and publishing results to dynamodb. I've used the TTL feature in Dynamodb to ensure that items are cleared out after 24 hours. 
 
 # Overview & Context
 I've attempted to complete the solution using a terraform approach I've been used to: blueprints + environments.  
