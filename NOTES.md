@@ -54,6 +54,9 @@ The layout is as follows:
   - terraform 0.12.28 + aws provider 2.70
   - aws cli 1.18.38
 
+* SSL certs:
+With a thought to 'best practice' I've setup the ALB for SSL termination, using a dummy cert I've created. I've uploaded the cert to AWS ACM and use a map variable to refer to the ALB to the correct cert arn. 
+
 
 # Rationale for using "-target" on the first round of applies:
 If you attempt to run "terraform apply" immediately after the terraform init, you'll run into an issue similar to the following:
@@ -82,3 +85,6 @@ terraform show | grep dns_name
 
 * Up until tf 0.11 I've had no issues using a variable in something like blueprints/techtest/main.tf to define the region in the provider. 
 In this case that wouldn't work as documented, as such I've used a workaround - defining the provider's region in the environments main.tf (e.g. environments/eu-west-1/main.tf)
+
+* Best practice choices: I've configured the ALB to explictly have no termination proctection - that isn't necessarily best practice but simplifies the clean up of the lab/test attempt too. 
+I've also used lifecycle management on a few resources - to demo the possiblity of using "prevent_destroy" to provide additional protection to accidental deletion - again with a view to keeping clean up simple, I've left this set to 'false' where it's been used.
