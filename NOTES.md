@@ -79,7 +79,7 @@ Hence the third terraform apply shown in 'quickstart' needs no target.
 * I've struggled to have the code output the dns_name of the Application load balancer. At this stage I think I've missed something silly which is most likely, or I've run up against a bug (which is less likely). 
 As a workaround you can obtain the details needed to test using:
 ```
-cd terraform/environments/<< region >>
+cd terraform/environments/(eu-west-1 | us-east-1)
 terraform show | grep dns_name
 ```
 
