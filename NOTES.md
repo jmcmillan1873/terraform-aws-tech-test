@@ -3,7 +3,7 @@
 # Quickstart
 To jump straight into deploying:
 ```
-cd terraform/environments/<< region >>
+cd terraform/environments/(eu-west-1 | us-east-1)
 terraform apply -target module.environment.aws_route_table_association.public
 terraform apply -target module.environment.aws_route_table_association.private
 terraform apply
