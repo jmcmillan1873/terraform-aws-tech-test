@@ -2,6 +2,7 @@
 
 # Quickstart
 To jump straight into deploying:
+note: before starting these steps you'll need to conifgure your environment with suitable credentials, e.g. 'aws configure' to deploy access keys
 ```
 cd terraform/environments/(eu-west-1 | us-east-1)
 terraform init
@@ -11,16 +12,24 @@ terraform apply
 ```
 
 # Summary of my proposed solutions
-1) To improve resilience, I've replaced the statically defined Web EC2 instance with Autoscaling group.
-   In terms of best practice I've moved the EC2 instance to the private subnet, they're still accessible from the internet via the ALB which *is* in the public subnet.  
+1) To improve resilience, I've replaced the statically defined Web EC2 instance with Autoscaling group. (blueprints/techtest/autoscaling.tf)
+   In terms of best practice I've moved the EC2 instance to the private subnet, they're still accessible from the internet via the ALB which *is* in the public subnet.  (blueprints/techtest/vpc.tf)
+   Using the autoscale group meant that I needed to create a loadbalancer, defined in blueprints/techtest/albs.tf.
+   I've also added a dummy cert to allow SSL termination on the ALB rather than opting for http. The http listener on the ALB redirects to https (I imported the cert to ACM but didn't use Terraform for this.)
    
-2) I've written the blueprint in such a way that it can accomodate regions of a different size, e.g. the 3 AZ's in eu-west-1 or the 6 AZ's in us-east-1. 
+2) I've written the blueprint in such a way that it can accomodate regions of a different size, e.g. the 3 AZ's in eu-west-1 or the 6 AZ's in us-east-1. (blueprints/techtest/vpc.tf)
    it does this by using map variablies (public_subnet_numbers & private_subnet_numbers) which allows us to link AZ's (e.g. 'a' for AzA) to the [netnum](https://www.terraform.io/docs/configuration/functions/cidrsubnet.html) we want to use within the cidr. 
+   data.tf defines datasets that allow for easier interpolation of the subnet ids when defing other resources, e.g. the alb..
 
-3) Bastion server added, again as an autoscale group, this time with a max count of 1 for basic fault tolerance & auto recovery.
-   Security groups have been configuired to only permit SSH access to the web tier from the bastion. 
+3) Bastion server added, again as an autoscale group, this time with a max count of 1 for basic fault tolerance & auto recovery.(blueprints/techtest/autoscaling.tf)
+   Security groups have been configuired to only permit SSH access to the web tier from the bastion. (blueprints/techtest/security_groups.tf)
 
-4) Basic lambda function deployed and publishing results to dynamodb. I've used the TTL feature in Dynamodb to ensure that items are cleared out after 24 hours. 
+4) Basic lambda function, using the python3.7 runtime, deployed and publishing results to dynamodb.
+   blueprints/techtest/lambda.tf uploads the python script (blueprints/techtest/ec2reports-function.py.zip), sets up the function and configures the trigger to run it every hour
+   The lambda function queires the ec2 instances and writes their current status along with a ttl in epoch time, & and a human readable date/time stamp.
+   blueprints/techtest/dynamodb.tf creates the table for the the lambda function to write to. 
+   I've used the TTL feature in Dynamodb to ensure that items are cleared out after 24 hours - it looks at the ttl attribute on each item to do this.
+
 
 # Overview & Context
 I've attempted to complete the solution using a terraform approach I've been used to: blueprints + environments.  
@@ -39,6 +48,9 @@ The layout is as follows:
 │        ├ albs.tf
 │        ├ autoscaling.tf
 │        ├ data.tf
+│        ├ dynamodb.tf
+│        ├ ec2reports-function.py.zip
+│        ├ lambda.tf
 │        ├ main.tf
 │        ├ security_groups.tf
 │        ├ variables.tf
