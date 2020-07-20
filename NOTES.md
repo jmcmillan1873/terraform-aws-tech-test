@@ -51,11 +51,11 @@ The layout is as follows:
   I've added this script to the repo under the "FirstTimeSetup" directory. 
 
 * My setup:
-  - terraform 0.12.28 / aws provifer 2.70
+  - terraform 0.12.28 + aws provider 2.70
   - aws cli 1.18.38
 
 
-# Rationale for using targetting route table associations first:
+# Rationale for using "-target" on the first round of applies:
 If you attempt to run "terraform apply" immediately after the terraform init, you'll run into an issue similar to the following:
 ```
 Error: Invalid for_each argument
@@ -73,8 +73,12 @@ Using the terraform recommended workaround, in this case by targetting the route
 Hence the third terraform apply shown in 'quickstart' needs no target.
 
 # Bugs / Known issues. 
-I've struggled to have the code output the dns_name of the Application load balancer. At this stage I think I've missed something silly which is most likely, or I've run up against a bug (which is less likely). 
-As a workaround you can obtain the details using
+* I've struggled to have the code output the dns_name of the Application load balancer. At this stage I think I've missed something silly which is most likely, or I've run up against a bug (which is less likely). 
+As a workaround you can obtain the details needed to test using:
 ```
+cd terraform/environments/<< region >>
 terraform show | grep dns_name
 ```
+
+* Up until tf 0.11 I've had no issues using a variable in something like blueprints/techtest/main.tf to define the region in the provider. 
+In this case that wouldn't work as documented, as such I've used a workaround - defining the provider's region in the environments main.tf (e.g. environments/eu-west-1/main.tf)
