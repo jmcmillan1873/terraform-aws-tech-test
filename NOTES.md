@@ -1,8 +1,8 @@
 # JohnMcMillan - ECS test attempt
 
 # Quickstart
-To jump straight into deploying:
-note: before starting these steps you'll need to conifgure your environment with suitable credentials, e.g. 'aws configure' to deploy access keys
+To jump straight into deploying:&nbsp;
+note: before starting these steps you'll need to configure your environment with suitable credentials, e.g. 'aws configure' to deploy access keys
 ```
 cd terraform/environments/(eu-west-1 | us-east-1)
 terraform init
