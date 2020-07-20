@@ -17,7 +17,7 @@ resource "aws_lb" "Web-ALB" {
   subnets            = [ for s in data.aws_subnet.public : s.id ]
   security_groups    = [aws_security_group.web-elb.id]
 
-  enable_deletion_protection = true
+  enable_deletion_protection = false
 
   tags = {
     Description      = "Web ALB"
